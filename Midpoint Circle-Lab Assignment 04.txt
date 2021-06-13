@@ -1,0 +1,164 @@
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.glu.GLU;
+import javax.swing.JFrame;
+public class Lab04 implements GLEventListener {
+private GLU glu;
+@Override
+public void init(GLAutoDrawable gld) {
+GL2 gl = gld.getGL().getGL2();
+glu = new GLU();
+gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+gl.glViewport(-250, -150, 250, 150);
+gl.glMatrixMode(GL2.GL_PROJECTION);
+gl.glLoadIdentity();
+glu.gluOrtho2D(-250.0, 250.0, -150.0, 150.0);
+}
+/**
+* Take care of drawing here.
+* @param drawable
+*/
+@Override
+public void display(GLAutoDrawable drawable) {
+GL2 gl = drawable.getGL().getGL2();
+gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
+
+DrawMPC(gl,12,-60,60);
+DrawMPC(gl,12,-40,60);
+DrawMPC(gl,12,-20,60);
+DrawMPC(gl,12,0,60);
+DrawMPC(gl,12,20,60);
+DrawMPC(gl,12,40,60);
+DrawMPC(gl,12,30,40);
+DrawMPC(gl,12,20,25);
+DrawMPC(gl,12,10,10);
+DrawMPC(gl,12,0,-5);
+DrawMPC(gl,12,-10,-20);
+DrawMPC(gl,12,-20,-35);
+DrawMPC(gl,12,-30,-50);
+}
+@Override
+public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+//do nothing
+}
+public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean
+deviceChanged) {
+//do nothing
+}
+public void dispose(GLAutoDrawable arg0) {
+//do nothing
+}
+double convertX(double x, double y, double zone) {
+double convertX=0;
+if(zone==0) {
+convertX=x;
+}
+else if(zone==1) {
+convertX=y;
+}
+else if(zone==2) {
+convertX=-y;
+}
+else if(zone==3) {
+convertX=-x;
+}
+else if(zone==4) {
+convertX=-x;
+}
+else if(zone==5) {
+convertX=-y;
+}
+else if(zone==6) {
+convertX=y;
+}
+else if(zone==7) {
+convertX=x;
+}
+return convertX;
+}
+double convertY(double x, double y, double zone) {
+double convertY=0;
+if(zone==0) {
+convertY=y;
+}
+else if(zone==1) {
+convertY=x;
+}
+else if(zone==2) {
+convertY=x;
+}
+else if(zone==3) {
+convertY=y;
+}
+else if(zone==4) {
+convertY=-y;
+}
+else if(zone==5) {
+convertY=-x;
+}
+else if(zone==6) {
+convertY=-x;
+}
+else if(zone==7) {
+convertY=-y;
+}
+return convertY;
+}
+private void DrawMPC(GL2 gl, double r, double cX, double cY) {
+//write your own code
+gl.glPointSize(1.7f);
+gl.glColor3d(1, 0, 0);
+double x,y,d;
+d=5-(4*r);
+x=r;
+y=0;
+gl.glBegin(GL2.GL_POINTS);
+gl.glVertex2d(convertX(x,y,0)+cX,convertY(x,y,0)+cY);
+gl.glVertex2d(convertX(x,y,1)+cX,convertY(x,y,1)+cY);
+gl.glVertex2d(convertX(x,y,2)+cX,convertY(x,y,2)+cY);
+gl.glVertex2d(convertX(x,y,3)+cX,convertY(x,y,3)+cY);
+gl.glVertex2d(convertX(x,y,4)+cX,convertY(x,y,4)+cY);
+gl.glVertex2d(convertX(x,y,5)+cX,convertY(x,y,5)+cY);
+gl.glVertex2d(convertX(x,y,6)+cX,convertY(x,y,6)+cY);
+gl.glVertex2d(convertX(x,y,7)+cX,convertY(x,y,7)+cY);
+while(x>y) {
+	if(d<0) {
+		d=d+(4*((2*y)+3));
+		y++;}
+	else {
+		d=d+(4*((2*y)-(2*x)+5));
+		x--;
+		y++;
+		}
+gl.glVertex2d(convertX(x,y,0)+cX,convertY(x,y,0)+cY);
+gl.glVertex2d(convertX(x,y,1)+cX,convertY(x,y,1)+cY);
+gl.glVertex2d(convertX(x,y,2)+cX,convertY(x,y,2)+cY);
+gl.glVertex2d(convertX(x,y,3)+cX,convertY(x,y,3)+cY);
+gl.glVertex2d(convertX(x,y,4)+cX,convertY(x,y,4)+cY);
+gl.glVertex2d(convertX(x,y,5)+cX,convertY(x,y,5)+cY);
+gl.glVertex2d(convertX(x,y,6)+cX,convertY(x,y,6)+cY);
+gl.glVertex2d(convertX(x,y,7)+cX,convertY(x,y,7)+cY);
+}
+gl.glEnd();
+}
+public static void main(String[] args) {
+//getting the capabilities object of GL2 profile
+final GLProfile profile = GLProfile.get(GLProfile.GL2);
+GLCapabilities capabilities = new GLCapabilities(profile);
+// The canvas
+final GLCanvas glcanvas = new GLCanvas(capabilities);
+Lab04 drawing = new Lab04();
+glcanvas.addGLEventListener(drawing);
+glcanvas.setSize(400, 400);
+//creating frame
+final JFrame frame = new JFrame ("circle");
+//adding canvas to frame
+frame.getContentPane().add(glcanvas);
+frame.setSize(frame.getContentPane().getPreferredSize());
+frame.setVisible(true);
+}
+}
